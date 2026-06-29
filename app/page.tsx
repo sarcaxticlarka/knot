@@ -13,15 +13,15 @@ import { Award } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
-  const [xp, setXp] = useState(150);
-  const [completedNodeIds, setCompletedNodeIds] = useState<string[]>(["node-1"]);
+  const [xp, setXp] = useState(0);
+  const [completedNodeIds, setCompletedNodeIds] = useState<string[]>([]);
   const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState<"neon" | "matrix" | "solar" | "cobalt">("neon");
   const [isMounted, setIsMounted] = useState(false);
 
   // Gamification overlay states
-  const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>(["first_bytes"]);
+  const [unlockedAchievements, setUnlockedAchievements] = useState<string[]>([]);
   const [isMuted, setIsMuted] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
@@ -121,9 +121,9 @@ export default function Home() {
   };
 
   const handleReset = () => {
-    setXp(150);
-    setCompletedNodeIds(["node-1"]);
-    setUnlockedAchievements(["first_bytes"]);
+    setXp(0);
+    setCompletedNodeIds([]);
+    setUnlockedAchievements([]);
     setActiveNodeId(null);
     setSidebarOpen(false);
     const resetLogs = [
@@ -132,9 +132,9 @@ export default function Home() {
     ];
     setMissionLogs(resetLogs);
     if (typeof window !== "undefined") {
-      localStorage.setItem("knot-arena-completed", JSON.stringify(["node-1"]));
-      localStorage.setItem("knot-arena-achievements", JSON.stringify(["first_bytes"]));
-      localStorage.setItem("knot-arena-xp", "150");
+      localStorage.setItem("knot-arena-completed", JSON.stringify([]));
+      localStorage.setItem("knot-arena-achievements", JSON.stringify([]));
+      localStorage.setItem("knot-arena-xp", "0");
       localStorage.setItem("knot-arena-logs", JSON.stringify(resetLogs));
     }
   };
@@ -182,6 +182,13 @@ export default function Home() {
 
     setCompletedNodeIds(newCompleted);
     setXp(workingXp);
+
+    // 0. Evaluate achievements: First Bytes (Node 1 completed)
+    if (nodeId === "node-1") {
+      const res = triggerAchievementUnlock("first_bytes", newCompleted, workingXp);
+      workingAchievements = res.nextAchievements;
+      workingXp = res.nextXP;
+    }
 
     // 1. Evaluate achievements: Pointer Master (Node 2 completed)
     if (nodeId === "node-2") {
