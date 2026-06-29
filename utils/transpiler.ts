@@ -7,13 +7,13 @@
 export function transpilePythonToJS(pythonCode: string): string {
   const lines = pythonCode.split("\n");
   const jsLines: string[] = [];
-  const indentStack: number[] = [0];
+  const indentStack: number[] = [];
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const trimmed = line.trim();
 
-    // Preserve empty lines and comment lines
+    // Preserve empty lines and comment lines without affecting block stack
     if (!trimmed || trimmed.startsWith("#")) {
       // Convert python comment '#' to JS '//'
       const jsComment = line.replace(/^\s*#/, (match) => match.replace("#", "//"));
@@ -25,10 +25,10 @@ export function transpilePythonToJS(pythonCode: string): string {
     const indentMatch = line.match(/^(\s*)/);
     const indent = indentMatch ? indentMatch[1].length : 0;
 
-    // If indent level decreased, pop stacks and close brackets
-    while (indentStack.length > 1 && indent < indentStack[indentStack.length - 1]) {
-      indentStack.pop();
-      const spaces = " ".repeat(indentStack[indentStack.length - 1]);
+    // Close any open blocks that are at an equal or deeper indentation level
+    while (indentStack.length > 0 && indent <= indentStack[indentStack.length - 1]) {
+      const closedIndent = indentStack.pop()!;
+      const spaces = " ".repeat(closedIndent);
       jsLines.push(`${spaces}}`);
     }
 
@@ -69,23 +69,22 @@ export function transpilePythonToJS(pythonCode: string): string {
       jsLine = jsLine.replace(/:$/, " {");
     }
 
-    // If a new brace was opened, push the current indent to the stack
+    // If a new brace was opened, track this indentation level
     if (jsLine.includes("{")) {
-      if (indent > indentStack[indentStack.length - 1]) {
-        indentStack.push(indent);
-      }
+      indentStack.push(indent);
     }
 
     jsLines.push(jsLine);
   }
 
-  // Close remaining open brackets
-  while (indentStack.length > 1) {
-    indentStack.pop();
-    const spaces = " ".repeat(indentStack[indentStack.length - 1]);
+  // Close any remaining unclosed blocks at the end of code
+  while (indentStack.length > 0) {
+    const closedIndent = indentStack.pop()!;
+    const spaces = " ".repeat(closedIndent);
     jsLines.push(`${spaces}}`);
   }
 
   return jsLines.join("\n");
 }
+
 export default transpilePythonToJS;
