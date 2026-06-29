@@ -2,6 +2,9 @@
 
 > **Winner-tier Hackathon Project**: A gamified skill-tree map where developers hack firewalls, run microsecond performance benchmark tests, customize synthesizer audio waveforms, and simulate algorithm solutions in real-time.
 
+🎥 **[Watch the Video Presentation on Google Drive](https://drive.google.com/file/d/1_6pFs3B--l8pl_Ea267B3NDjkFSRWkPz/view?usp=sharing)**  
+🌐 **[Try the Live Web App on Vercel](https://knot-green.vercel.app/)**
+
 ---
 
 ## 🚀 Pitch & Introduction
@@ -100,3 +103,10 @@ Featuring custom Web Audio synthesis, resizable console viewports, multi-theme e
 | **Node 4** | Binary Tree Sanctum | DFS Recursive / Balanced Tree Checker | Specialist |
 | **Node 5** | Graph Reconnaissance | DFS Cycle Detection / Course Schedule | Grandmaster |
 | **Node 6** | DP Citadel Core | Dynamic Programming / Minimum Path Sum | Grandmaster |
+
+---
+
+## 🔗 Links & References
+- **Live URL**: [https://knot-green.vercel.app/](https://knot-green.vercel.app/)
+- **Video Presentation**: [Google Drive File](https://drive.google.com/file/d/1_6pFs3B--l8pl_Ea267B3NDjkFSRWkPz/view?usp=sharing)
+- **Code Repository**: [GitHub](https://github.com/sarcaxticlarka/knot.git)
